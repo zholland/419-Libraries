@@ -1,0 +1,7 @@
+algorithms.connectivity
+algorithms.graphloader
+algorithms.search
+algorithms.search.tools
+algorithms.spanningtree
+core.components
+core.visualizer
