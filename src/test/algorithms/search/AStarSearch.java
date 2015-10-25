@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-import algorithms.search.tools.Heuristic;
-import algorithms.search.tools.State;
-import algorithms.search.tools.WeightedEdge;
+import core.components.Heuristic;
+import core.components.State;
+import core.components.WeightedEdge;
 import edu.uci.ics.jung.graph.Graph;
 
 // TODO: Change to have a successor function instead of using

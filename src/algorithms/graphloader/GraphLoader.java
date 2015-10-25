@@ -79,7 +79,7 @@ public interface GraphLoader<V, E> {
 	 * 
 	 * @return - The type of graph specified
 	 */
-	default public Graph<V, E> getGraph(int graphType) {
+	default Graph<V, E> getGraph(int graphType) {
 				
 		switch(graphType) {
 			case SparseMultigraph:

@@ -1,4 +1,4 @@
-package algorithms.search.tools;
+package core.components;
 
 public interface Heuristic<V extends State> {
 

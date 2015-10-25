@@ -46,8 +46,8 @@ import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
  *  There is a stack P that keeps track of nodes visited that have not been assigned to a connected component.
  *	There is a count C that keeps track of the number of nodes visited during the DFS.
  *	There is a vector a that maps each node to -1 until it is assigned to a connected component
- *	There is a vector p called preorder_map that stores where the vertex was found along the path. These are initially -1 to indicate is has
- *	not been visited yet. 
+ *	There is a vector p called preorder_map that stores where the vertex was found along the path.
+ *	These are initially -1 to indicate is has not been visited yet.
  *
  *	The algorithm proceeds as follows:
  *
@@ -209,8 +209,8 @@ public class PathBasedComponents<V, E> implements StrongConnectedComponents<V, E
 	 * At worst O(|V|^2) time to wrap the generic type vertices into
 	 * the ComponentVertices used for the search and visualization.
 	 * 
-	 * @param graph - The generic graph
-	 * @return - Graph with the same structure, however vertices are wrapped
+	 * @param graph The generic graph
+	 * @return Graph with the same structure, however vertices are wrapped
 	 * 			 and edges are Integers
 	 */
 	private Graph<ComponentVertex<V>, E> wrapGraph(Graph<V, E> graph) {

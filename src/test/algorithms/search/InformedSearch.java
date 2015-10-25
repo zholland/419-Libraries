@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
 
-import algorithms.search.tools.State;
+import core.components.State;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;

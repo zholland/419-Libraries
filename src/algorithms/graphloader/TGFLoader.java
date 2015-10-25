@@ -70,8 +70,6 @@ public class TGFLoader {
 	 */
 	public Graph<Integer, Edge> loadGraph(int graphType, boolean isWeighted) {
 
-		Graph<Integer, Edge> graph = getGraph(graphType);
-
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
@@ -89,7 +87,9 @@ public class TGFLoader {
 				FileReader reader = new FileReader(tgf);
 				BufferedReader bufferedReader = new BufferedReader(reader);
 				String line = bufferedReader.readLine();
-				
+
+				Graph<Integer, Edge> graph = getGraph(graphType);
+
 				while (!line.equals("#")) {
 					line = line.trim();
 					Integer vertex = Integer.valueOf(line);
@@ -122,6 +122,7 @@ public class TGFLoader {
 				}
 				
 				reader.close();
+				return graph;
 				
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(null,
@@ -130,39 +131,37 @@ public class TGFLoader {
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
-		return graph;
+		return null;
 	}
 
 	private Graph<Integer, Edge> getGraph(int graphType) {
-		Graph<Integer, Edge> graph;
-		
+
 		switch(graphType) {
 			case 1:
-				graph = new SparseMultigraph<>();
+				return new SparseMultigraph<>();
 			case 2:
-				graph = new DelegateForest<>();
+				return new DelegateForest<>();
 			case 3:
-				graph = new DelegateTree<>();
+				return new DelegateTree<>();
 			case 4:
-				graph = new SortedSparseMultigraph<>();
+				return new SortedSparseMultigraph<>();
 			case 5:
-				graph = new OrderedSparseMultigraph<>();
+				return new OrderedSparseMultigraph<>();
 			case 6:	
-				 graph = new UndirectedOrderedSparseMultigraph<>(); 
+				 return new UndirectedOrderedSparseMultigraph<>();
 			case 7: 
-				 graph = new UndirectedSparseGraph<>();
+				 return new UndirectedSparseGraph<>();
 			case 8:	 
-				 graph = new UndirectedSparseMultigraph<>();
+				 return new UndirectedSparseMultigraph<>();
 			case 9:
-				 graph = new DirectedOrderedSparseMultigraph<>();
+				 return new DirectedOrderedSparseMultigraph<>();
 			case 10:
-				 graph = new DirectedSparseGraph<>();
+				 return new DirectedSparseGraph<>();
 			case 11:	 
-				 graph = new DirectedSparseMultigraph<>();	 
+				 return new DirectedSparseMultigraph<>();
 			default:
-				graph = new SparseGraph<>();
+				return new SparseGraph<>();
 		}
-		return graph;
 	}	
 
 }

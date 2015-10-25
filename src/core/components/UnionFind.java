@@ -1,4 +1,4 @@
-package algorithms.search.tools;
+package core.components;
 
 import java.util.HashMap;
 import java.util.HashSet;

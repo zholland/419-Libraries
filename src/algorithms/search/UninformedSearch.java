@@ -128,5 +128,14 @@ public interface UninformedSearch<V, E extends Edge> {
 		public String toString() {
 			return  vertex.toString() + " .. " + "Layer: " + String.valueOf(layer);
 		}
+
+		@Override
+		public boolean equals(Object other) {
+			if (other.getClass() != ExtendedVertex.class) {
+				return false;
+			}
+			ExtendedVertex otherV = (ExtendedVertex)other;
+			return this.vertex.equals(otherV.getVertex());
+		}
 	}
 }

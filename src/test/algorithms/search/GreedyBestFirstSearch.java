@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import algorithms.search.tools.Heuristic;
-import algorithms.search.tools.State;
+import core.components.Heuristic;
+import core.components.State;
 import edu.uci.ics.jung.graph.Graph;
 
 /**
