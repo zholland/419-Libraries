@@ -319,16 +319,16 @@ public class GraphMLReader implements GraphLoader<Vertex, Edge> {
 
 					// Get the name of attribute (ie weight)
 					String attr = edgeAttr.get(key).keySet().iterator().next();
-					
+
 					if (attr.equals("weight")) {
 						String type = edgeAttr.get(key).get(attr).getLeft();
 						Number weight = getNumberValue(type, Double.valueOf(value));
 						edge.setWeight(weight);
 						continue;
 					}
-					
+
 					edge.addAttribute(attr, value);
-					
+
 				}
 			// Otherwise load the default edge attributes (if any) into the
 			// attribute list of the edge being constructed.

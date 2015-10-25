@@ -7,6 +7,8 @@ import algorithms.graphloader.GraphMLReader;
 import algorithms.search.ShortestPath;
 import core.components.Edge;
 import core.components.Vertex;
+import core.visualizer.Visualizer;
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.graph.Graph;
 
 public class PathTest {
@@ -16,6 +18,9 @@ public class PathTest {
 //
 //		GraphLoader<Vertex, Edge> graphLoader = new GraphMLReader();
 //		Graph<Vertex, Edge> graph = graphLoader.loadGraph(0);
+//
+//        Visualizer.viewGraph(graph);
+//
 //
 //		ShortestPath<Vertex, Edge> searcher = new ShortestPath<>();
 //
