@@ -15,7 +15,7 @@ import java.util.Collection;
  * @param <V> The vertex class type
  * @param <E> The edge class type
  */
-public class ClusteringCoeff<V, E> {
+public class Clustering<V, E> {
 
     /**
      *
@@ -27,7 +27,7 @@ public class ClusteringCoeff<V, E> {
      * @return A double with the clustering coefficient, or null
      *         if the vertex does not exist.
      */
-    public static<V,E> Double clusterCoefficient(Graph<V,E> graph, V vertex) {
+    public static<V,E> Double coefficient(Graph<V,E> graph, V vertex) {
 
         // Vertex not in the graph, return null.
         if (!graph.containsVertex(vertex)) {
@@ -112,12 +112,12 @@ public class ClusteringCoeff<V, E> {
      * @param <E> The edge type.
      * @return A double value for the average clustering coefficient.
      */
-    public static<V,E> Double averageClustering(Graph<V,E> graph) {
+    public static<V,E> Double average(Graph<V,E> graph) {
 
         Double coefficientSum = 0.0;
 
         for (V vertex : graph.getVertices()) {
-            coefficientSum += clusterCoefficient(graph, vertex);
+            coefficientSum += coefficient(graph, vertex);
         }
 
         return (coefficientSum/graph.getVertices().size());
@@ -126,7 +126,7 @@ public class ClusteringCoeff<V, E> {
 //    public static void main(String[] args) {
 //        Graph<Vertex, Edge> graph = new Erdos<>().getGraph(0.1, 50);
 //        Vertex v = Tools.getVertex(graph, "2");
-//        System.out.println(ClusteringCoeff.clusterCoefficient(graph, v));
+//        System.out.println(Clustering.clusterCoefficient(graph, v));
 //    }
 
 }
