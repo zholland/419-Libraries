@@ -62,39 +62,39 @@ public class ShortestPath<V, E extends Edge> {
 		// Map of nodes on the path, parents is value, key is child
 		HashMap<V, V> parent = new HashMap<>();
 		
-		Number maxValue = null;
+		Number maxValue;
 		E edgeTest = graph.getEdges().iterator().next();
+
 		// This is so ugly, I hate Java Numbers
-		if (edgeTest.getWeight().getClass() == Double.class) {
-			maxValue = Double.MAX_VALUE;
-			Double clear = (Double)maxValue - (Double)maxValue;
-			// Place each vertex in the map, initialize distances and put
-			// the pairings into the queue.
-			for (V vertex : graph.getVertices()) {			
+		int numberType = 0;
+		if (edgeTest.getWeight() instanceof Integer) {
+			numberType = 1;
+		} else if (edgeTest.getWeight() instanceof Double) {
+			numberType = 2;
+		}
+		// Place each vertex in the map, initialize distances and put
+		// the pairings into the queue.
+		for (V vertex : graph.getVertices()) {
+			if (numberType == 1) {
+				maxValue = Integer.MAX_VALUE;
 				if (vertex.equals(source)) {
-					distanceTable.put(source, new Double(0));
-					queue.add(new Pair<V, Number>(vertex, clear));
-				} else {
-					distanceTable.put(vertex, Double.MAX_VALUE);
-					queue.add(new Pair<V, Number>(vertex, maxValue));
-				}
-			}
-		} else if (edgeTest.getWeight().getClass() == Integer.class) {
-			maxValue = Integer.MAX_VALUE;
-			Integer clear = (Integer)maxValue - (Integer)maxValue;
-			// Place each vertex in the map, initialize distances and put
-			// the pairings into the queue.
-			for (V vertex : graph.getVertices()) {			
-				if (vertex.equals(source)) {
-					distanceTable.put(source, new Integer(0));
-					queue.add(new Pair<V, Number>(vertex, clear));
+					distanceTable.put(source, 0);
+					queue.add(new Pair<>(vertex, 0));
 				} else {
 					distanceTable.put(vertex, Integer.MAX_VALUE);
-					queue.add(new Pair<V, Number>(vertex, maxValue));
+					queue.add(new Pair<>(vertex, maxValue));
+				}
+			} else if (numberType == 2) {
+				maxValue = Double.MAX_VALUE;
+				if (vertex.equals(source)) {
+					distanceTable.put(source, 0.0);
+					queue.add(new Pair<>(vertex, 0.0));
+				} else {
+					distanceTable.put(vertex, Double.MAX_VALUE);
+					queue.add(new Pair<>(vertex, maxValue));
 				}
 			}
 		}
-		
 		
 		parent.put(source, null);
 
@@ -118,26 +118,23 @@ public class ShortestPath<V, E extends Edge> {
 								
 				// Test for type of number used for weight, work accordingly
 				// Did I mention I hate the Java Number class.
-				if (edge.getWeight().getClass() == Double.class) {
-					
-					Double alternateDistance = (Double)edge.getWeight();
+				if (numberType == 1) {
 
-					if (alternateDistance < (Double)distanceTable.get(neighbour)) {
-						distanceTable.put(neighbour, alternateDistance);
-						parent.put(neighbour, vertex);
-						queue.add(new Pair<V, Number>(neighbour, alternateDistance));
-					}			
-					
-				} else if (edge.getWeight().getClass() == Integer.class) {
-					
 					Integer alternateDistance = (Integer)edge.getWeight();
 
 					if (alternateDistance < (Integer)distanceTable.get(neighbour)) {
 						distanceTable.put(neighbour, alternateDistance);
 						parent.put(neighbour, vertex);
-						queue.add(new Pair<V, Number>(neighbour, alternateDistance));
+						queue.add(new Pair<>(neighbour, alternateDistance));
 					}
-					
+				} else if (numberType == 2) {
+					Double alternateDistance = (Double)edge.getWeight();
+
+					if (alternateDistance < (Double)distanceTable.get(neighbour)) {
+						distanceTable.put(neighbour, alternateDistance);
+						parent.put(neighbour, vertex);
+						queue.add(new Pair<>(neighbour, alternateDistance));
+					}
 				}
 			}
 		}

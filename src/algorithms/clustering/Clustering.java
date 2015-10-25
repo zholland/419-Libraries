@@ -51,7 +51,6 @@ public class Clustering<V, E> {
                 neighbourList.add(graph.getDest(edge));
             }
 
-
             int edgesBetweenNeighbours = 0;
             // Cycle through neighbours, test if their neighbours are
             // also connected to the neigbhours of the given vertex.
@@ -75,9 +74,7 @@ public class Clustering<V, E> {
 
             // Coefficient is equal to the number of edges between neighbours divided by
             // the degree of the vertex multiplied by one less than the degree of the vertex
-            double coefficient = ( edgesBetweenNeighbours / (double)(outDegree * (outDegree - 1)) );
-
-            return coefficient;
+            return ( edgesBetweenNeighbours / (double)(outDegree * (outDegree - 1)) );
 
         } else {
 
@@ -94,15 +91,12 @@ public class Clustering<V, E> {
                 }
             }
 
-            int outDegree = graph.outDegree(vertex);
+            int degree = graph.degree(vertex);
 
             // Coefficient is equal to twice the number of edges between neighbours divided by
             // the degree of the vertex multiplied by one less than the degree of the vertex
-            double coefficient = ((2 * edgesBetweenNeighbours) / (double)(outDegree * (outDegree - 1)) );
-
-            return coefficient;
+            return ((2 * edgesBetweenNeighbours) / (double)(degree * (degree - 1)) );
         }
-
     }
 
     /**
