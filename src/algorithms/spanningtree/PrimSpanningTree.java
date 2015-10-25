@@ -7,8 +7,21 @@ import edu.uci.ics.jung.graph.DelegateForest;
 import edu.uci.ics.jung.graph.Forest;
 import edu.uci.ics.jung.graph.Graph;
 
+/**
+ * @param <V> The vertex type
+ * @param <E> The edge type, extending core.Edge
+ *
+ * @author Mike Nowicki
+ */
 public class PrimSpanningTree<V, E extends Edge> implements MinimalSpanningTree<V, E> {
 
+	/**
+	 * Generate a minimum spanning tree based on Prim's algorithm.
+	 *
+	 * @param graph - The graph to search
+	 * @return A tree representing a minimal spanning tree
+	 * 		   using Prim's algorithm,
+	 */
 	@Override
 	public Forest<V,E> findMinimalSpanningTree(Graph<V,E> graph) {
 		
@@ -46,7 +59,6 @@ public class PrimSpanningTree<V, E extends Edge> implements MinimalSpanningTree<
 	@Override
 	public void visualizeTree(Forest<V, E> forest) {
 		// TODO Visualize the forest
-		
 	}
 
 }

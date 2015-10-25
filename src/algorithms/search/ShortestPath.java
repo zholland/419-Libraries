@@ -174,7 +174,9 @@ public class ShortestPath<V, E extends Edge> {
 
 	/**
 	 * Private comparator used to order the pairings in the queue
-	 * 
+	 *
+	 * Generic numbers suck for comparisons..
+	 *
 	 * @author Michael Nowicki
 	 *
 	 */

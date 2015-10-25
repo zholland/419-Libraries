@@ -20,6 +20,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+//import core.components.Edge;
+//import core.components.Vertex;
+//
+//import algorithms.graphloader.*;
+
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
@@ -278,8 +283,6 @@ public class PathBasedComponents<V, E> implements StrongConnectedComponents<V, E
 		pm.add(new TranslatingGraphMousePlugin());      
 		originalViewer.setGraphMouse(pm);
 
-//		GraphZoomScrollPane originalZoom = new GraphZoomScrollPane(originalViewer);
-
 		JFrame frame = new JFrame("Connected Component Viewer");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
@@ -359,7 +362,7 @@ public class PathBasedComponents<V, E> implements StrongConnectedComponents<V, E
 	 * Private nested vertex class that is used to wrap the original
 	 * graph. 
 	 * 
-	 * @author Mike-SSD
+	 * @author Mike Nowicki
 	 *
 	 * @param <T> - The type of the original vertex
 	 */

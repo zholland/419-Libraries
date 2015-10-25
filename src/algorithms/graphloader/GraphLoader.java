@@ -17,20 +17,20 @@ import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 import edu.uci.ics.jung.graph.UndirectedSparseMultigraph;
 
 public interface GraphLoader<V, E> {
-	
-	final int SparseGraph = 0;
-	final int SparseMultigraph = 1;
-	final int DelegateForest =	2; 
-	final int DelegateTree = 3;
-	final int SortedSparseMultigraph = 4;
-	final int OrderedSparseMultigraph = 5;
-	final int UndirectedOrderedSparseMultigraph = 6;
-	final int UndirectedSparseGraph = 7;
-	final int UndirectedSparseMultigraph = 8;
-	final int DirectedOrderedSparseMultigraph = 9;
-	final int DirectedSparseGraph = 10;
-	final int DirectedSparseMultigraph = 11;
-	
+
+	int SparseGraph = 0;
+	int SparseMultigraph = 1;
+	int DelegateForest =	2;
+	int DelegateTree = 3;
+	int SortedSparseMultigraph = 4;
+	int OrderedSparseMultigraph = 5;
+	int UndirectedOrderedSparseMultigraph = 6;
+	int UndirectedSparseGraph = 7;
+	int UndirectedSparseMultigraph = 8;
+	int DirectedOrderedSparseMultigraph = 9;
+	int DirectedSparseGraph = 10;
+	int DirectedSparseMultigraph = 11;
+
 	/**
 	 * Loads the graph file into the type of graph passed.
 	 * 

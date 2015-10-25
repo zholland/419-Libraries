@@ -22,6 +22,10 @@ import edu.uci.ics.jung.graph.Graph;
  */
 public class KruskallMinimalSpanningTree<V, E extends Edge> implements MinimalSpanningTree<V, E> {
 
+	/**
+	 * @param graph - The graph to search
+	 * @return
+	 */
 	@Override
 	public Forest<V, E> findMinimalSpanningTree(Graph<V, E> graph) {
 		
