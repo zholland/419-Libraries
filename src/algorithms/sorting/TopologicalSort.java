@@ -5,10 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import algorithms.graphloader.GraphMLReader;
-import core.components.Edge;
-import core.components.Vertex;
-import core.visualizer.Visualizer;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 
@@ -22,19 +18,19 @@ import edu.uci.ics.jung.graph.util.EdgeType;
  */
 public class TopologicalSort<V, E> {
 	
-	public static void main(String[] args) {
-		GraphMLReader reader = new GraphMLReader();
-		Graph<Vertex, Edge> graph = reader.loadGraph(0);
-		TopologicalSort<Vertex, Edge> sort = new TopologicalSort<>();
-
-		if (sort != null) {
-			for (Vertex v : sort.sort(graph)) {
-				System.out.println(v);
-			}
-			Visualizer.viewGraph(graph);
-		}
-
-	}
+//	public static void main(String[] args) {
+//		GraphMLReader reader = new GraphMLReader();
+//		Graph<Vertex, Edge> graph = reader.loadGraph(0);
+//		TopologicalSort<Vertex, Edge> sort = new TopologicalSort<>();
+//
+//		if (sort != null) {
+//			for (Vertex v : sort.sort(graph)) {
+//				System.out.println(v);
+//			}
+//			Visualizer.viewGraph(graph);
+//		}
+//
+//	}
 	
 	/**
 	 * Sorts the vertices in the given graph if the graph is directed.

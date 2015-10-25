@@ -12,6 +12,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import edu.uci.ics.jung.algorithms.layout.Layout;
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
@@ -33,7 +34,7 @@ import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
  * @author Mike Nowicki
  *
  */
-public class Visualizer<V,E> {
+public class Visualizer {
 
 	/**
 	 * Creates a new frame and presents the forest/tree using the JUNG TreeLayout
@@ -131,6 +132,36 @@ public class Visualizer<V,E> {
 
 		createFrame(vv, zoomPane);
 	}
+
+	/**
+	 * View the graph with the layout provided by the user.
+	 * @param graph The graph to view.
+	 * @param layout The layout style to view with.
+	 * @param <V> The vertex type.
+	 * @param <E> The edge type.
+	 */
+	public static <V,E> void viewGraph(Graph<V,E> graph, Layout<V,E> layout) {
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		double width = screenSize.getWidth();
+		double height = screenSize.getHeight();
+
+		VisualizationViewer<V,E> vv =	new VisualizationViewer<>(layout);
+		vv.setPreferredSize(new Dimension((int)width, (int)height)); //Sets the viewing area size
+
+		// Set structure of JUNG pane and mouse control.
+		GraphZoomScrollPane zoomPane = new GraphZoomScrollPane(vv);
+
+		PluggableGraphMouse pm = new PluggableGraphMouse();
+		pm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, 1 / 1.1f, 1.1f));
+		pm.add(new TranslatingGraphMousePlugin());
+
+		vv.setGraphMouse(pm);
+
+		createFrame(vv, zoomPane);
+
+	}
+
 
 	private static <V,E> void createFrame(VisualizationViewer<V, E> vv, GraphZoomScrollPane zoomPane) {
 

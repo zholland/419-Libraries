@@ -24,7 +24,8 @@ public class KruskallMinimalSpanningTree<V, E extends Edge> implements MinimalSp
 
 	/**
 	 * @param graph - The graph to search
-	 * @return
+	 * @return A Forest object containing the minimal spanning tree or
+	 *         null if one does not exist.
 	 */
 	@Override
 	public Forest<V, E> findMinimalSpanningTree(Graph<V, E> graph) {
@@ -45,7 +46,7 @@ public class KruskallMinimalSpanningTree<V, E extends Edge> implements MinimalSp
 		
 		// Place list of edges into sortable list
 		List<E> orderedEdgeWeights = new ArrayList<>();
-		for (E edge :  graph.getEdges()) {
+		for (E edge : graph.getEdges()) {
 			orderedEdgeWeights.add(edge);
 		}
 		orderedEdgeWeights.sort(new EdgeComparator());
@@ -84,28 +85,4 @@ public class KruskallMinimalSpanningTree<V, E extends Edge> implements MinimalSp
 		return spanningTree;
 	}
 
-	/**
-	 * Hacky casting but w/e
-	 * 
-	 * @author Mike Nowicki
-	 *
-	 */
-	private class EdgeComparator implements Comparator<E> {
-
-		@Override
-		public int compare(E e1, E e2) {
-			if ((Double)e1.getWeight() < (Double)e2.getWeight()) {
-				return 1;
-			} else if ((Double)e1.getWeight() > (Double)e2.getWeight()) {
-				return -1;
-			}
-			return 0;
-		}
-	}
-
-	@Override
-	public void visualizeTree(Forest<V, E> forest) {
-		// TODO Visualize the forest
-	}
-	
 }

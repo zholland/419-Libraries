@@ -27,6 +27,10 @@ public class Edge {
 		// Initialize to empty string and Integer 0
 		this("", 0);
 	}
+
+	public Edge(String id) {
+		this(id,0);
+	}
 	
 	public Edge(Number weight) {
 		// Initialize to empty string and given weight
