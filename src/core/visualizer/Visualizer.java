@@ -93,14 +93,28 @@ public class Visualizer {
 	 * @param node - A node to highlight (typically to show where searches began)
 	 */
 	public static <V,E> void viewGraph(Graph<V,E> graph, V node, boolean viewEdgeLabels) {
+		viewGraph(graph, null, node, viewEdgeLabels);
+	}
+
+	/**
+	 * View the graph with the layout provided by the user.
+	 * @param givenLayout The layout style to view with, can be null.
+	 * @param graph The graph to view.
+	 * @param node The vertex to indicate as the root, if any
+	 * @param <V> The vertex type.
+	 * @param <E> The edge type.
+	 */
+	public static <V,E> void viewGraph(Graph<V,E> graph, Layout<V,E> givenLayout, V node, boolean viewEdgeLabels) {
+
+		Layout<V,E> layout = givenLayout;
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
 		double height = screenSize.getHeight();
 
-		KKLayout<V, E> layout = new KKLayout<>(graph);
-		layout.setSize(new Dimension((int)width, (int)height)); // sets the initial size of the space
-		layout.setLengthFactor(1.5);
+		if (layout == null) {
+			layout = new KKLayout<>(graph);
+		}
 
 		VisualizationViewer<V,E> vv =	new VisualizationViewer<>(layout);
 		vv.setPreferredSize(new Dimension((int)width, (int)height)); //Sets the viewing area size
@@ -112,42 +126,11 @@ public class Visualizer {
 				}
 				return Color.RED;
 			}
-		};		
+		};
 
-		vv.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
-		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<V>());	
-		
 		if (viewEdgeLabels) {
-			vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<E>());		
+			vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<E>());
 		}
-	
-		// Set structure of JUNG pane and mouse control.
-		GraphZoomScrollPane zoomPane = new GraphZoomScrollPane(vv);
-
-		PluggableGraphMouse pm = new PluggableGraphMouse();
-		pm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, 1 / 1.1f, 1.1f));   
-		pm.add(new TranslatingGraphMousePlugin());      
-
-		vv.setGraphMouse(pm);
-
-		createFrame(vv, zoomPane);
-	}
-
-	/**
-	 * View the graph with the layout provided by the user.
-	 * @param graph The graph to view.
-	 * @param layout The layout style to view with.
-	 * @param <V> The vertex type.
-	 * @param <E> The edge type.
-	 */
-	public static <V,E> void viewGraph(Graph<V,E> graph, Layout<V,E> layout) {
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		double width = screenSize.getWidth();
-		double height = screenSize.getHeight();
-
-		VisualizationViewer<V,E> vv =	new VisualizationViewer<>(layout);
-		vv.setPreferredSize(new Dimension((int)width, (int)height)); //Sets the viewing area size
 
 		// Set structure of JUNG pane and mouse control.
 		GraphZoomScrollPane zoomPane = new GraphZoomScrollPane(vv);
@@ -162,7 +145,6 @@ public class Visualizer {
 
 	}
 
-
 	private static <V,E> void createFrame(VisualizationViewer<V, E> vv, GraphZoomScrollPane zoomPane) {
 
 		JFrame frame = new JFrame("Simple Graph View");
@@ -176,7 +158,6 @@ public class Visualizer {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
 				frame.dispose();
 			}
 			
