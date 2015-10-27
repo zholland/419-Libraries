@@ -38,8 +38,10 @@ public class Visualizer {
 
 	/**
 	 * Creates a new frame and presents the forest/tree using the JUNG TreeLayout.
-	 * 
+	 *
 	 * @param forest The forest to view.
+	 * @param <V> The vertex type.
+	 * @param <E> The edge type.
 	 */
 	public static <V,E> void viewTree(Forest<V,E> forest) {
 		viewTree(forest, null);
@@ -49,6 +51,8 @@ public class Visualizer {
 	 * General viewer for the graph.
 	 *
 	 * @param graph - The graph to visualize.
+	 * @param <V> The vertex type.
+	 * @param <E> The edge type.
 	 */
 	public static <V,E> void viewGraph(Graph<V,E> graph) {
 		viewGraph(graph, null, false);
@@ -69,6 +73,8 @@ public class Visualizer {
 	 * General viewer that highlights a specific node (the root)
 	 * @param graph - The graph to view
 	 * @param node - A node to highlight (typically to show where searches began)
+	 * @param <V> The vertex type.
+	 * @param <E> The edge type.
 	 */
 	public static <V,E> void viewGraph(Graph<V,E> graph, V node, boolean viewEdgeLabels) {
 		viewGraph(graph, null, node, viewEdgeLabels);
@@ -124,7 +130,8 @@ public class Visualizer {
 	 * View the graph with the layout provided by the user.
 	 * @param givenLayout The layout style to view with, can be null.
 	 * @param graph The graph to view.
-	 * @param node The vertex to indicate as the root, if any
+	 * @param node The vertex to indicate as the root, if any.
+	 * @param viewEdgeLabels Boolean to indicate if edge labels should be shown.
 	 * @param <V> The vertex type.
 	 * @param <E> The edge type.
 	 */
