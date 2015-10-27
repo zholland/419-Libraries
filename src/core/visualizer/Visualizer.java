@@ -37,16 +37,62 @@ import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 public class Visualizer {
 
 	/**
-	 * Creates a new frame and presents the forest/tree using the JUNG TreeLayout
+	 * Creates a new frame and presents the forest/tree using the JUNG TreeLayout.
 	 * 
-	 * @param forest The forest to view
+	 * @param forest The forest to view.
 	 */
 	public static <V,E> void viewTree(Forest<V,E> forest) {
+		viewTree(forest, null);
+	}
+
+	/**
+	 * General viewer for the graph.
+	 *
+	 * @param graph - The graph to visualize.
+	 */
+	public static <V,E> void viewGraph(Graph<V,E> graph) {
+		viewGraph(graph, null, false);
+	}
+
+	/**
+	 * View the graph and choose to show the edge labels.
+	 * @param graph The graph to view.
+	 * @param viewEdgeLabels Boolean indicating if edge labels should be shown.
+	 * @param <V> The vertex type.
+	 * @param <E> The edge type.
+	 */
+	public static <V,E> void viewGraph(Graph<V,E> graph, boolean viewEdgeLabels) {
+		viewGraph(graph, null, viewEdgeLabels);
+	}
+
+	/**
+	 * General viewer that highlights a specific node (the root)
+	 * @param graph - The graph to view
+	 * @param node - A node to highlight (typically to show where searches began)
+	 */
+	public static <V,E> void viewGraph(Graph<V,E> graph, V node, boolean viewEdgeLabels) {
+		viewGraph(graph, null, node, viewEdgeLabels);
+	}
+
+	/**
+	 * Visualize the forest with a given layout. If null is provided for the
+	 * layout a new TreeLayout will be created for the visualization.
+	 * @param forest The forest/tree to visualize.
+	 * @param givenLayout The layout to use or null.
+	 * @param <V> The vertex type.
+	 * @param <E> The edge type.
+	 */
+	public static <V,E> void viewTree(Forest<V,E> forest, Layout<V,E> givenLayout) {
+
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
 		double height = screenSize.getHeight();
 
-		TreeLayout<V,E> layout = new TreeLayout<>(forest, 250);
+		Layout<V,E> layout = givenLayout;
+
+		if (givenLayout == null ) {
+			layout = new TreeLayout<>(forest);
+		}
 
 		VisualizationViewer<V,E> vv =	new VisualizationViewer<>(layout);
 		vv.setPreferredSize(new Dimension((int)width, (int)height)); //Sets the viewing area size
@@ -55,45 +101,23 @@ public class Visualizer {
 			public Paint transform(V v) {
 				return Color.RED;
 			}
-		};		
+		};
 
 		vv.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
-		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<V>());	
-		
-		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<E>());		
-	
+		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<V>());
+
+		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<E>());
+
 		// Set structure of JUNG pane and mouse control.
 		GraphZoomScrollPane zoomPane = new GraphZoomScrollPane(vv);
 
 		PluggableGraphMouse pm = new PluggableGraphMouse();
-		pm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, 1 / 1.1f, 1.1f));   
-		pm.add(new TranslatingGraphMousePlugin());      
+		pm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, 1 / 1.1f, 1.1f));
+		pm.add(new TranslatingGraphMousePlugin());
 
 		vv.setGraphMouse(pm);
 
 		createFrame(vv, zoomPane);
-	}
-	
-	/**
-	 * General viewer for the graph
-	 * 
-	 * @param graph - The graph to draw
-	 */
-	public static <V,E> void viewGraph(Graph<V,E> graph) {
-		viewGraph(graph, null, false);
-	}
-	
-	public static <V,E> void viewGraph(Graph<V,E> graph, boolean viewEdgeLabels) {
-		viewGraph(graph, null, viewEdgeLabels);
-	}
-	
-	/**
-	 * General viewer that highlights a specific node (the root)
-	 * @param graph - The graph to view
-	 * @param node - A node to highlight (typically to show where searches began)
-	 */
-	public static <V,E> void viewGraph(Graph<V,E> graph, V node, boolean viewEdgeLabels) {
-		viewGraph(graph, null, node, viewEdgeLabels);
 	}
 
 	/**
