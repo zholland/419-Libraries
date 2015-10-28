@@ -48,7 +48,7 @@ public class KruskallMinimalSpanningTree<V, E extends Edge> implements MinimalSp
 		for (E edge : graph.getEdges()) {
 			orderedEdgeWeights.add(edge);
 		}
-		orderedEdgeWeights.sort(new EdgeComparator());
+		orderedEdgeWeights.sort(new EdgeComparator<>());
 		
 		// Loop over edges
 		for (int i = 0; i < orderedEdgeWeights.size(); i++) {

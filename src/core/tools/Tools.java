@@ -5,7 +5,6 @@ import core.components.Vertex;
 
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.util.EdgeType;
-import generators.random.Erdos;
 
 /**
  * A collection of methods to help access information

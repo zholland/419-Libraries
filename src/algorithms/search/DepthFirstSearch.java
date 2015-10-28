@@ -130,7 +130,7 @@ public class DepthFirstSearch<V, E extends Edge> implements UninformedSearch<V, 
 			}
 
 			for (V neighbour : neighbours) {
-				ExtendedVertex nextVertex = new ExtendedVertex(neighbour, layer+1);
+				ExtendedVertex<V> nextVertex = new ExtendedVertex<>(neighbour, layer+1);
 				if (nodeOrder.contains(nextVertex) || openList.contains(nextVertex)){
 					continue;
 				}

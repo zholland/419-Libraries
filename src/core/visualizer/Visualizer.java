@@ -158,7 +158,9 @@ public class Visualizer {
 				return Color.RED;
 			}
 		};
-
+		
+		vv.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
+		
 		if (viewEdgeLabels) {
 			vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<E>());
 		}

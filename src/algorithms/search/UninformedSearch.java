@@ -131,11 +131,11 @@ public interface UninformedSearch<V, E extends Edge> {
 
 		@Override
 		public boolean equals(Object other) {
-			if (other.getClass() != ExtendedVertex.class) {
-				return false;
+			if (other instanceof ExtendedVertex) {
+				ExtendedVertex<T> otherV = (ExtendedVertex<T>)other;
+				return this.vertex.equals(otherV.getVertex());
 			}
-			ExtendedVertex otherV = (ExtendedVertex)other;
-			return this.vertex.equals(otherV.getVertex());
+			return false;
 		}
 	}
 }
