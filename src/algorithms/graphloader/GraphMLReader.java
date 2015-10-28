@@ -27,8 +27,6 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 
 public class GraphMLReader implements GraphLoader<Vertex, Edge> {
 
-	// TODO: Make the right correction for the number based on the type declared
-//	private String numberType = "";
 	/**
 	 * HashMap that uses a String for Keys and HashMaps with HashMaps for Values. 
 	 * The keys specify the id of the attribute. The values use the attribute name
@@ -62,7 +60,7 @@ public class GraphMLReader implements GraphLoader<Vertex, Edge> {
 		vertexMap = new HashMap<>();
 		isDirected = false;
 	}
-	
+
 	@Override
 	public Graph<Vertex, Edge> loadGraph(Graph<Vertex, Edge> graph) {
 
@@ -233,7 +231,7 @@ public class GraphMLReader implements GraphLoader<Vertex, Edge> {
 
 			// If the node has data, assign it to the attributes. Otherwise, check
 			// if there are any default values and assign the attribute(s) accordingly
-			if (element.hasContent()) {
+				if (element.hasContent()) {
 				for (Iterator<?> itr = element.elementIterator(); itr.hasNext();) {
 
 					Element data = (Element) itr.next();

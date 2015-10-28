@@ -6,11 +6,13 @@ parse graphml files. Some of the jars are dependencies of others which is why th
 
 # Development Style
 
-Please keep classes simple, and preferably static. A class should implement a few basic public methods
-which the users would be able to invoke. Classes should preferably be generic for vertices and edges,
-however if your algorithm requires setting attributes for vertices or edges then you can use
+Please keep classes simple, and preferably static (this is not always possible and is up to me to enforce moving
+forward with the other components of the system, see GraphML loader or PathBasedComponents). A class should 
+implement a few basic public methods which the users would be able to invoke. Classes should preferably be generic 
+for vertices and edges, however if your algorithm requires setting attributes for vertices or edges then you can use
 `<V extends Vertex, E extends Edge>` where Vertex and Edge are in the `core.components` package. There
 are no dependencies between classes in this library, except for the few interfaces that are implemented.
+You can feel free to use any classes/methods within the library if they will help you implement your algorithm.
 Therefore you should be free to create your algorithms without needing to rely on what has already been
 developed. (Of course, you can use the generators to create random graphs to test your algorithm on, or
 the graph loaders.) Try to include your algorithm in a package that is related to its functionality, or
@@ -37,3 +39,6 @@ A complete Javadoc for JUNG2 can be found at http://jung.sourceforge.net/doc/api
 
 If you have any questions about how to use these libraries you can contact me by email at
 mikenowicki022@gmail.com
+
+If you have any suggestions for improvements to this library I would always welcome the input, feel free to
+submit pull requests if you have made an improvement to the library. It would be much appreciated!
