@@ -26,5 +26,5 @@ public interface StrongConnectedComponents<V,E> {
 	 * Creates a new frame and displays the initial graph and the
 	 * connected components coded by colour.
 	 */
-	void visualizeSearch();
+	void visualizeSearch(Graph<V,E> graph);
 }

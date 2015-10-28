@@ -1,42 +1,22 @@
 package algorithms.connectivity;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Paint;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Stack;
-
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-
-//import core.components.Edge;
-//import core.components.Vertex;
-//
-//import algorithms.graphloader.*;
-
-import org.apache.commons.collections15.Transformer;
-
+import core.components.Vertex;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.SparseGraph;
-import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
 import edu.uci.ics.jung.visualization.control.PluggableGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.TranslatingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import org.apache.commons.collections15.Transformer;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
+import java.util.List;
 
 /**
  *  Generic implementation of Dijkstra's Shortest Path Connected
@@ -67,7 +47,7 @@ import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
  * @param <V> - Vertex type, must extend the ComponentVertex class
  * @param <E> - Edge type
  */
-public class PathBasedComponents<V, E> implements StrongConnectedComponents<V, E> {
+public class PathBasedComponents<V extends Vertex, E> implements StrongConnectedComponents<V, E> {
 
 //	public static void main(String[] args) {
 //
@@ -88,25 +68,25 @@ public class PathBasedComponents<V, E> implements StrongConnectedComponents<V, E
 	 * This is the stack S in the algorithm for tracking
 	 * nodes in the component
 	 */
-	private Stack<ComponentVertex<V>> unassignedCC;
+	private Stack<V> unassignedCC;
 	/**
 	 * The stack P from the algorithm tracking the current
 	 * search path.
 	 */
-	private Stack<ComponentVertex<V>> currentPath;
+	private Stack<V> currentPath;
 	/**
 	 * This maps vertices to the depth the vertex was visited at
 	 */
-	private HashMap<ComponentVertex<V>, Integer> preorderMap;
+	private HashMap<V, Integer> preorderMap;
 	/**
 	 * This map keeps a record of which vertices have been assigned
 	 * to connected components.
 	 */
-	private HashMap<ComponentVertex<V>, Integer> assignedVars;
+	private HashMap<V, Integer> assignedVars;
 	/**
 	 * The graph to search. It is a wrapping of the given user graph.
 	 */
-	private Graph<ComponentVertex<V>, E> wrappedGraph;
+//	private Graph<V>, E> wrappedGraph;
 
 	/**
 	 * Counter for tracking how deep on the search path we are
@@ -136,10 +116,10 @@ public class PathBasedComponents<V, E> implements StrongConnectedComponents<V, E
 		
 		// Store user node in a wrapper vertex with info needed
 		// for detecting components.
-		wrappedGraph = wrapGraph(graph);
+//		wrappedGraph = wrapGraph(graph);
 
 		// Place each vertex in the maps and initialize the values
-		for (ComponentVertex<V> v : wrappedGraph.getVertices()) {
+		for (V v : graph.getVertices()) {
 			preorderMap.put(v,-1);
 			assignedVars.put(v,-1);
 		}
@@ -147,16 +127,16 @@ public class PathBasedComponents<V, E> implements StrongConnectedComponents<V, E
 		// While there is a vertex not assigned to a component perform a DFS
 		// search from the vertex
 		while (assignedVars.containsValue(-1)) {
-			for (ComponentVertex<V> vertex : wrappedGraph.getVertices()) {
+			for (V vertex : graph.getVertices()) {
 				if (assignedVars.get(vertex) == -1) {
-					dfs(wrappedGraph, vertex);
+					dfs(graph, vertex);
 				}	
 			}	
 		}
 		return components;
 	}
 
-	private void dfs(Graph<ComponentVertex<V>, E> graph, ComponentVertex<V> vertex) {
+	private void dfs(Graph<V, E> graph, V vertex) {
 		
 		// Set preorder value
 		preorderMap.put(vertex, ctr);
@@ -166,14 +146,14 @@ public class PathBasedComponents<V, E> implements StrongConnectedComponents<V, E
 		unassignedCC.push(vertex);
 		currentPath.push(vertex);
 		
-		Collection<ComponentVertex<V>> neighbours = new HashSet<>();
+		Collection<V> neighbours = new HashSet<>();
 		// Need to use Out edges to ensure correctness for digraphs
 		for (E edge : graph.getOutEdges(vertex)) {
 			neighbours.add(graph.getDest(edge));
 		}
 		
 		// Iterate over neighbours
-		for (ComponentVertex<V> neighbour : neighbours) {
+		for (V neighbour : neighbours) {
 			// If not marked yet continue dfs from neighbour
 			if (preorderMap.get(neighbour) == -1) {
 				dfs(graph, neighbour);
@@ -191,9 +171,9 @@ public class PathBasedComponents<V, E> implements StrongConnectedComponents<V, E
 		if (currentPath.peek().equals(vertex)) {
 			components.add(new ArrayList<>());
 			while (!unassignedCC.isEmpty()) {
-				ComponentVertex<V> componentPart = unassignedCC.pop();
-				components.get(ccNumber).add(componentPart.getData());
-				componentPart.setComponentNumber(ccNumber);
+				V componentPart = unassignedCC.pop();
+				components.get(ccNumber).add(componentPart);
+				componentPart.addAttribute("component", ""+ccNumber);
 				assignedVars.put(componentPart, 1);
 				
 				if (componentPart.equals(vertex)) {
@@ -204,79 +184,28 @@ public class PathBasedComponents<V, E> implements StrongConnectedComponents<V, E
 			} // end while
 		} // end if
 	}
-	
-	/**
-	 * At worst O(|V|^2) time to wrap the generic type vertices into
-	 * the ComponentVertices used for the search and visualization.
-	 * 
-	 * @param graph The generic graph
-	 * @return Graph with the same structure, however vertices are wrapped
-	 * 			 and edges are Integers
-	 */
-	private Graph<ComponentVertex<V>, E> wrapGraph(Graph<V, E> graph) {
-		
-		Graph<ComponentVertex<V>, E> wrappedGraph = new SparseGraph<>();
-		HashMap<V, ComponentVertex<V>> wrappedVertices = new HashMap<>();
-		
-		for (V v : graph.getVertices()) {
-			ComponentVertex<V> wrappedVertex = new ComponentVertex<V>(v);
-			wrappedVertices.put(v, wrappedVertex);
-			wrappedGraph.addVertex(wrappedVertex);
-		}
-		
-		for (V v : graph.getVertices()) {
-		
-			Collection<V> neighbours = new HashSet<>();
-			for (E edge : graph.getOutEdges(v)) {
-				neighbours.add(graph.getDest(edge));
-			}
-			for (V neighbour : neighbours) {			
-				ComponentVertex<V> source = wrappedVertices.get(v);
-				ComponentVertex<V> destination = wrappedVertices.get(neighbour);
-				// If they are not neighbours yet add an edge between the two vertices
-				if (!wrappedGraph.isNeighbor(wrappedVertices.get(v), wrappedVertices.get(neighbour))) {
-					wrappedGraph.addEdge(graph.findEdge(v, neighbour), source, destination, EdgeType.DIRECTED);
-				}
-			}
-		}		
-		return wrappedGraph;
-	}
-	
-	public Graph<ComponentVertex<V>, E> getWrappedGraph() {
-		return this.wrappedGraph;
-	}
-	
+
 //	Visualization Stuff from here down -------------------------------------------------------
 	
 	/**
 	 * Draws the graph with each connect component coloured
 	 */
-	public void visualizeSearch() {
-		
-		if (wrappedGraph == null) {
-			System.out.println("Graph has not been initialized.");
-			return;
-		}
-		
-		if (wrappedGraph.getVertexCount() == 0) {
-			System.out.println("Graph has not been loaded yet.");
-			return;
-		}
-		
+	public void visualizeSearch(Graph<V,E> graph) {
+
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
 		double height = screenSize.getHeight();
 		
-		VisualizationViewer<ComponentVertex<V>, E> originalViewer;
+		VisualizationViewer<V, E> originalViewer;
 				
-		KKLayout<ComponentVertex<V>, E> userLayout = new KKLayout<>(wrappedGraph);
+		KKLayout<V, E> userLayout = new KKLayout<>(graph);
 		userLayout.setSize(new Dimension((int)width, (int)height)); // sets the initial size of the space
 		userLayout.setLengthFactor(1.5);
 		
 		originalViewer = new VisualizationViewer<>(userLayout);
 		originalViewer.setPreferredSize(new Dimension((int)width, (int)height));
 		originalViewer.getRenderContext().setVertexFillPaintTransformer(new VertexPaint());
-		originalViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<ComponentVertex<V>>());
+		originalViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<V>());
 		
 		PluggableGraphMouse pm = new PluggableGraphMouse();
 		pm.add(new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, 1 / 1.1f, 1.1f));   
@@ -327,7 +256,7 @@ public class PathBasedComponents<V, E> implements StrongConnectedComponents<V, E
 	 * @author Mike-SSD
 	 *
 	 */
-	private class VertexPaint implements Transformer<ComponentVertex<V>, Paint> {
+	private class VertexPaint implements Transformer<V, Paint> {
 		
 		private ArrayList<Color> colours;
 		
@@ -337,8 +266,8 @@ public class PathBasedComponents<V, E> implements StrongConnectedComponents<V, E
 		}
 		
 		@Override
-		public Paint transform(ComponentVertex<V> state) {		
-			return colours.get(state.getComponentNumber());
+		public Paint transform(V state) {
+			return colours.get(Integer.valueOf(state.getAttribute("component")));
 		}
 		
 		private void loadColours() {			
@@ -356,39 +285,5 @@ public class PathBasedComponents<V, E> implements StrongConnectedComponents<V, E
 			colours.add(Color.PINK);
 			colours.add(Color.GRAY);
 		}	
-	}
-	
-	/**
-	 * Private nested vertex class that is used to wrap the original
-	 * graph. 
-	 * 
-	 * @author Mike Nowicki
-	 *
-	 * @param <T> - The type of the original vertex
-	 */
-	private class ComponentVertex<T> {
-
-		private int componentID;
-		private T data;
-		
-		public ComponentVertex(T data) {
-			this.data = data;
-		}
-		
-		public void setComponentNumber(int componentID) {
-			this.componentID = componentID;
-		}
-		
-		public int getComponentNumber() {
-			return componentID;
-		}
-		
-		public T getData() {
-			return this.data;
-		}
-		
-		public String toString() {
-			return "" + componentID;
-		}
 	}
 }

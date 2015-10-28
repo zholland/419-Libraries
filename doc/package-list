@@ -8,5 +8,3 @@ core.components
 core.tools
 core.visualizer
 generators.random
-test
-test.algorithms.search

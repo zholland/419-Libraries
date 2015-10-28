@@ -29,6 +29,8 @@ public class Barabasi<V> {
         return getGraph(m, n, false);
     }
 
+
+
     /**
      * Generates an undirected Barabasi-Albert random graph based on the given
      * parameter m for the number of initial vertices to use and the collection
