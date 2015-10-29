@@ -222,7 +222,7 @@ public class Barabasi<V> {
 
 //    public static void main(String[] args) {
 //        Graph<Vertex, Edge> graph = new Barabasi<>().getGraph(3, 50, true);
-//        Visualizer.viewGraph(graph, new CircleLayout<>(graph));
+//        Visualizer.viewGraph(graph);
 //    }
 
 }
