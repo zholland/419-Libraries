@@ -1,6 +1,10 @@
 bin/
 .settings/
 .idea/
+src/core/stocks/
+src/core/webcrawler/
+
+Results/
 
 networxlib.iml
 
