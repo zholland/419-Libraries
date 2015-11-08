@@ -2,11 +2,9 @@ package algorithms.clustering;
 
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
+import edu.uci.ics.jung.graph.util.Pair;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -15,6 +13,7 @@ import java.util.stream.Collectors;
  * @author Zach Holland
  */
 public class Triangles {
+
     /**
      * Counts the number of triangles in a graph. Uses the Node-Iteration algorithm.
      *
@@ -23,7 +22,7 @@ public class Triangles {
      * @param <E>   The type of the edges.
      * @return The number of triangles in the graph.
      */
-    public static <V, E> int count(Graph<V, E> graph) {
+    public static <V extends Comparable<V>, E> int count(Graph<V, E> graph) {
         return nodeIterationCount(graph).getTotalTriangles();
     }
 
@@ -51,28 +50,89 @@ public class Triangles {
     }
 
     /**
-     * Counts the number of triangles in a graph using the Node-Iteration algorithm.
+     * Counts the number of triangles for each edge as well as the total number of edges
+     * in a graph using the Node-Iteration algorithm.
      *
      * @param graph The graph on which the triangles are counted.
      * @param <V>   The type of the vertices.
      * @param <E>   The type of the edges.
-     * @return The number of triangles in the graph.
+     * @return A special object containing the total number of triangles in the graph as well as the
+     * number of triangles for each edge.
+     * @see GraphTriangles
      */
-    public static <V, E> GraphTriangles<E> nodeIterationCount(Graph<V, E> graph) {
-        return null;
+    public static <V extends Comparable<V>, E> GraphTriangles<E> nodeIterationCount(Graph<V, E> graph) {
+        // Since the algorithm works by removing vertices from the graph, we need to operate on
+        // a copy of the original graph to prevent the original graph from changing which might
+        // be unexpected for the user.
+        Graph<V, E> graphClone = cloneGraph(graph);
+
+        Comparator<V> byAscendingDegree = (v1, v2) -> {
+            int diff = graphClone.degree(v1) - graphClone.degree(v2);
+            if (diff == 0) {
+                return v1.compareTo(v2);
+            }
+            return diff;
+        };
+
+        TreeSet<V> vertices = graphClone.getVertices().stream()
+                .collect(Collectors.toCollection(() -> new TreeSet<>(byAscendingDegree)));
+
+        GraphTriangles<E> graphTriangles = new GraphTriangles<>();
+
+
+        while (graphClone.getVertexCount() > 0) {
+            V v = vertices.pollFirst();
+            Collection<V> neighborCollection = graphClone.getNeighbors(v);
+            if (neighborCollection != null) {
+                ArrayList<V> neighbors = neighborCollection.stream().collect(Collectors.toCollection(ArrayList::new));
+
+                for (int i = 0; i < neighbors.size() - 1; i++) {
+                    for (int j = i + 1; j < neighbors.size(); j++) {
+                        if (graphClone.isNeighbor(neighbors.get(i), neighbors.get(j))) {
+                            graphTriangles.incrementTriangleCount(graphClone.findEdge(v, neighbors.get(i)));
+                            graphTriangles.incrementTriangleCount(graphClone.findEdge(v, neighbors.get(j)));
+                            graphTriangles.incrementTriangleCount(graphClone.findEdge(neighbors.get(i), neighbors.get(j)));
+                        }
+                    }
+                }
+            }
+            graphClone.removeVertex(v);
+        }
+        return graphTriangles;
+    }
+
+    private static <V, E> Graph<V, E> cloneGraph(Graph<V, E> graph) {
+        Graph<V, E> newGraph = new SparseGraph<>();
+        graph.getVertices().forEach(newGraph::addVertex);
+        graph.getEdges().forEach(e -> {
+            Pair<V> endpoints = graph.getEndpoints(e);
+            newGraph.addEdge(e, endpoints.getFirst(), endpoints.getSecond());
+        });
+        return newGraph;
     }
 
     /**
-     * Counts the number of triangles in a graph using the Fast-Forward counting algorithm.
+     * Counts the number of triangles for each edge as well as the total number of edges
+     * in a graph using the Fast-Forward counting algorithm.
      *
      * @param graph The graph on which the triangles are counted.
      * @param <V>   The type of the vertices.
      * @param <E>   The type of the edges.
-     * @return The number of triangles in the graph.
+     * @return A special object containing the total number of triangles in the graph as well as the
+     * number of triangles for each edge.
+     * @see GraphTriangles
      */
     public static <V extends Comparable<V>, E> GraphTriangles<E> fastForwardCount(Graph<V, E> graph) {
+        Comparator<V> byDescendingDegree = (v1, v2) -> {
+            int diff = graph.degree(v2) - graph.degree(v1);
+            if (diff == 0) {
+                return v1.compareTo(v2);
+            }
+            return diff;
+        };
+
         TreeSet<V> vertices = graph.getVertices().stream()
-                .collect(Collectors.toCollection(TreeSet::new));
+                .collect(Collectors.toCollection(() -> new TreeSet<>(byDescendingDegree)));
 
         HashMap<V, Set<V>> vertexMap = new HashMap<>(graph.getVertexCount());
         graph.getVertices().forEach(v -> vertexMap.put(v, new TreeSet<>()));
@@ -81,13 +141,10 @@ public class Triangles {
 
         vertices.forEach(s -> graph.getNeighbors(s)
                 .forEach(t -> {
-                    int sDegree = graph.degree(s);
-                    int tDegree = graph.degree(t);
-
                     // Proceed only if the degree of s is greater than the degree of t OR if the degrees are equal
                     // and s comes before t in the natural ordering of the vertex type.
                     // This is required to maintain an absolute ordering of the vertices.
-                    if (sDegree > tDegree || (sDegree == tDegree && s.compareTo(t) < 0)) {
+                    if (byDescendingDegree.compare(s, t) < 0) {
                         Set<V> sSet = vertexMap.get(s);
                         Set<V> tSet = vertexMap.get(t);
                         Set<V> intersection = new TreeSet<>(sSet);
@@ -140,19 +197,34 @@ public class Triangles {
 
     public static void main(String[] args) {
         Graph<Integer, String> graph = new SparseGraph<>();
-        graph.addVertex(1);
-        graph.addVertex(2);
-        graph.addVertex(3);
-        graph.addVertex(4);
+        for (int i = 1; i <= 10000; i++) {
+            graph.addVertex(i);
+        }
 
-        graph.addEdge("4-1", 4, 1);
-        graph.addEdge("4-2", 4, 2);
-        graph.addEdge("1-2", 1, 2);
-        graph.addEdge("2-3", 2, 3);
-        graph.addEdge("3-1", 3, 1);
+        Random random = new Random();
 
-        GraphTriangles<String> gt = Triangles.fastForwardCount(graph);
-        System.out.println(gt.getTotalTriangles());
-        System.out.println(gt.getEdgeTriangleCountMap().get("3-1"));
+        for (int i = 1; i <= 99; i++) {
+            for (int j = i + 1; j <= 99; j++) {
+                if (random.nextDouble() < 0.5) {
+                    graph.addEdge(i + "-" + j, i, j);
+                }
+            }
+        }
+
+        GraphTriangles<String> nodeIterationCount;
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < 100; i++) {
+            nodeIterationCount = Triangles.nodeIterationCount(graph);
+        }
+        long endTime = System.currentTimeMillis();
+        System.out.println(endTime - startTime);
+
+        GraphTriangles<String> fastForwardCount;
+        startTime = System.currentTimeMillis();
+        for (int i = 0; i < 100; i++) {
+            fastForwardCount = Triangles.fastForwardCount(graph);
+        }
+        endTime = System.currentTimeMillis();
+        System.out.println(endTime - startTime);
     }
 }
