@@ -241,41 +241,20 @@ public class Triangles {
          * Returns the map containing the number of triangles associated with each edge.
          * @return The map containing the number of triangles associated with each edge.
          */
-        public Map<E, Integer> getEdgeTriangleCountMap() {
+        private Map<E, Integer> getEdgeTriangleCountMap() {
             return edgeTriangleCountMap;
         }
-    }
 
-    public static void main(String[] args) {
-        Graph<Integer, String> graph = new SparseGraph<>();
-        for (int i = 1; i <= 10000; i++) {
-            graph.addVertex(i);
+        /**
+         * Returns the number of triangles that the given edge is involved in.
+         *
+         * @param edge The edge for which to get the number of triangles.
+         * @return The number of triangles that the given edge is involved in
+         */
+        public int getNumberOfTrianglesForEdge(E edge) {
+            Integer numTriangles = edgeTriangleCountMap.get(edge);
+
+            return numTriangles == null ? 0 : numTriangles;
         }
-
-        Random random = new Random();
-
-        for (int i = 1; i <= 99; i++) {
-            for (int j = i + 1; j <= 99; j++) {
-                if (random.nextDouble() < 0.5) {
-                    graph.addEdge(i + "-" + j, i, j);
-                }
-            }
-        }
-
-        GraphTriangles<String> nodeIterationCount;
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
-            nodeIterationCount = Triangles.nodeIterationCount(graph);
-        }
-        long endTime = System.currentTimeMillis();
-        System.out.println(endTime - startTime);
-
-        GraphTriangles<String> fastForwardCount;
-        startTime = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
-            fastForwardCount = Triangles.fastForwardCount(graph);
-        }
-        endTime = System.currentTimeMillis();
-        System.out.println(endTime - startTime);
     }
 }
